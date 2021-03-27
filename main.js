@@ -1,8 +1,9 @@
 'use strict';
 class Counter {
   constructor() {
-    this.counter = 0;
     this.isPaused = false;
+    this.counter = 0;
+    this.miliseconds = 0;
     this.seconds = 0;
     this.minuts = 0;
   }
@@ -13,8 +14,9 @@ class Counter {
     this.isPaused = this.isPaused ? false : true;
   }
   calcTime() {
-    this.minuts = (this.counter / 60) | 0;
-    this.seconds = this.counter % 60;
+    this.minuts = (this.counter / 100 / 60) | 0;
+    this.seconds = ((this.counter / 100) | 0) % 60;
+    this.miliseconds = this.counter % 100;
   }
   resetTimer() {
     this.counter = 0;
@@ -36,14 +38,15 @@ function startTimer() {
       counter.calcTime();
       writeTime(counter);
     }
-  }, 1000);
+  }, 10);
 }
 function writeTime(counter) {
   let time = document.querySelectorAll('.shm-time')[0];
   let formatNumber = n => (n > 9 ? '' + n : '0' + n);
+  let miliseconds = formatNumber(counter.miliseconds);
   let minuts = formatNumber(counter.minuts);
   let seconds = formatNumber(counter.seconds);
-  time.innerHTML = `${minuts}:${seconds}`;
+  time.innerHTML = `${minuts}:${seconds}:${miliseconds}`;
 }
 
 let counter = new Counter();
